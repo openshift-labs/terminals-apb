@@ -1,0 +1,23 @@
+---
+#
+# By default, we assume we're running in the cluster and everything will be done
+# in the current namespace, so we do not need to login as cluster admin, but we
+# do allow to login as cluster admin so the APB can be tested locally using Docker
+#
+- name: login as super user with token
+  command: "oc login {{ master_url }} --token={{ openshift_token }} --insecure-skip-tls-verify=true"
+  when:
+    - openshift_token is defined
+    - openshift_token is not none
+    - openshift_token|trim() != ""
+
+- name: login as super user with pwd
+  command: "oc login {{ master_url }} -u {{ openshift_user }} -p {{ openshift_password }} --insecure-skip-tls-verify=true"
+  when:
+    - openshift_token is not defined or openshift_token is none or openshift_token|trim() == "" 
+    - openshift_user is defined
+    - openshift_user is not none
+    - openshift_user|trim() != ""
+    - openshift_password is defined
+    - openshift_password is not none
+    - openshift_password|trim() != ""

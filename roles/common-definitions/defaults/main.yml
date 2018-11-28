@@ -1,0 +1,4 @@
+---
+master_url: "kubernetes.default"
+#namespace: ocp-workshop
+#create_projects: true

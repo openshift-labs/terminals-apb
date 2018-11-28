@@ -1,0 +1,55 @@
+---
+#####
+# Terminals:
+# https://raw.githubusercontent.com/openshift-labs/workshop-terminals/1.1.2/templates/production.json
+###
+- name: Get apps route suffix
+  block:
+    - openshift_v1_route:
+        name: dummy
+        namespace: "{{ namespace }}"
+        state: present
+        spec_to_kind: Service
+        spec_to_name: dummy
+        spec_port_target_port: 8080
+      register: dummy_route
+    - set_fact:
+        apps_hostname_suffix: "{{ dummy_route.route.spec.host|regex_replace('^dummy-' + namespace + '\\.(.*)$', '\\1') }}"
+    - openshift_v1_route:
+        name: dummy
+        namespace: "{{ namespace }}"
+        state: absent
+###
+- name: "Create temporary directory"
+  tempfile:
+    state: directory
+    path: "/tmp/"
+  register: tmp_dir
+#####
+- name: "Process terminals template"
+  template:
+    src: terminals.json.j2
+    dest: "{{ tmp_dir.path }}/terminals.json"
+
+- name: Add terminals template to {{ namespace }}
+  command: "oc apply -f {{ tmp_dir.path }}/terminals.json -n {{ namespace }}"
+
+- name: Create terminals resources
+  shell: >
+        oc new-app workshop-terminals-production
+        -p TERMINAL_IMAGE={{ terminal_image }}
+        -p JUPYTERHUB_IMAGE={{ jupyterhub_image }}
+        -n {{ namespace }}
+        --dry-run -o yaml > terminals.yml
+  args:
+    chdir: "{{ tmp_dir.path }}"
+
+- name: Apply terminals objects
+  command: "oc apply -f terminals.yml -n {{ namespace }}"
+  args:
+    chdir: "{{ tmp_dir.path }}"
+
+- name: Set dashboard URL
+  asb_dashboard_url:
+    dashboard_url:
+      "terminals.{{ apps_hostname_suffix }}"

@@ -1,0 +1,4 @@
+---
+terminal_image: "quay.io/osevg/terminal-workspace:1.1.2"
+jupyterhub_image: "quay.io/osevg/terminal-jupyterhub:1.1.2"
+infrasvcs_adm_user: opentlc-mgr

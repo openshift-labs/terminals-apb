@@ -1,0 +1,60 @@
+version: 1.0
+name: terminals-apb
+description: Deploys terminals that spawn on demand and are configured with OpenShift SSO and all the required tools in it  
+bindable: False
+async: optional
+alpha:
+  dashboard_redirect: True
+metadata:
+  displayName: terminals
+  dependencies: []
+plans:
+  - name: default
+    description: This default plan deploys terminals-apb
+    free: True
+    metadata: {}
+    parameters:
+#    - name: openshift_user
+#      title: Username
+#      description: User is required for creating project admin resources
+#      type: string
+#      required: true
+#      display_type: text
+#      display_group: OpenShift Cluster Admin User
+#    - name: openshift_password
+#      title: Password
+#      description: Password is required for creating project admin resources
+#      type: string
+#      required: true
+#      display_type: password
+#      display_group: OpenShift Cluster Admin User
+#    - name: openshift_token
+#      title: User token
+#      description: User is required for creating project admin resources
+#      type: string
+#      required: true
+#      display_type: text
+#      display_group: OpenShift Cluster Admin User
+    - name: terminal_image
+      title: Terminals image
+      description: Image coordinates to use for terminals
+      type: string
+      required: true
+      default: "quay.io/osevg/terminal-workspace:1.1.2"
+      display_type: text
+      display_group: Terminals
+    - name: jupyterhub_image
+      title: JupyterHub image
+      description: Image coordinates to use for JupyterHub
+      type: string
+      required: true
+      default: "quay.io/osevg/terminal-jupyterhub:1.1.2"
+      display_type: text
+      display_group: Terminals
+    - name: infrasvcs_adm_user
+      title: Admin User
+      description: Admin user for terminals
+      type: string
+      required: false
+      display_type: text
+      display_group: Terminals
