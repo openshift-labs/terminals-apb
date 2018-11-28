@@ -6,13 +6,22 @@ async: optional
 alpha:
   dashboard_redirect: True
 metadata:
-  displayName: terminals
-  dependencies: []
+  dependencies: ['quay.io/osevg/terminal-workspace','quay.io/osevg/terminal-jupyterhub']
+  displayName: "OpenShift terminals on-demand"
+  longDescription: |-
+    Installs an OpenShift terminal spawner application. Terminals are integrated with OpenShift SSO.
+    The terminals will have (at least) the following tooling:
+    - oc client tool
+    - kubectl client tool
+    - odo client tool
+  console.openshift.io/iconClass: "fas fa-terminal"
+  provideDisplayName: "OpenShift Evangelists"
 plans:
   - name: default
     description: This default plan deploys terminals-apb
     free: True
-    metadata: {}
+    metadata:
+      displayName: Default
     parameters:
 #    - name: openshift_user
 #      title: Username
